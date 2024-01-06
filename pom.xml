@@ -19,8 +19,8 @@
 		<maven.compiler.release>17</maven.compiler.release>
 
 		<app.main.class>com.flamingmarshmallow.demo.App</app.main.class>
-		
-		
+
+
 		<plugin.maven.shade.version>3.2.4</plugin.maven.shade.version>
 
 		<dependency.args4j.version>2.33</dependency.args4j.version>
@@ -30,6 +30,13 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.16.1</version>
+		</dependency>
+
+
 		<!-- <dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> 
 			<version>4.11</version> <scope>test</scope> </dependency> -->
 		<dependency>
@@ -132,17 +139,9 @@
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>3.0.2</version>
-					<!-- 
-					<configuration>
-						<archive>
-							<manifest>
-								<addClasspath>true</addClasspath>
-								<classpathPrefix>lib/</classpathPrefix>
-								<mainClass>com.flamingmarshmallow.demo.App</mainClass>
-							</manifest>
-						</archive>
-					</configuration>
-					-->
+					<!-- <configuration> <archive> <manifest> <addClasspath>true</addClasspath> 
+						<classpathPrefix>lib/</classpathPrefix> <mainClass>com.flamingmarshmallow.demo.App</mainClass> 
+						</manifest> </archive> </configuration> -->
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
