@@ -13,30 +13,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SimpleDemoObject {
 	
 	public final String name;
-	public final String longDescription;
-	public final List<String> tags;
+	public final String description;
+	public final List<String> attributes;
 	public final long created;
-	
+	public final long updated;
 	
 	@JsonCreator
 	public SimpleDemoObject(@JsonProperty("name") final String name,
 							@JsonProperty("longDescription") final String longDescription,
 							@JsonProperty("tags") final List<String> tags,
-							@JsonProperty("created") final long created) {
+							@JsonProperty("created") final long created,
+							@JsonProperty("updated") final long updated) {
 		this.name = name;
-		this.longDescription = longDescription;
-		this.tags = Collections.unmodifiableList(tags);
+		this.description = longDescription;
+		this.attributes = Collections.unmodifiableList(tags);
 		this.created = created;
+		this.updated = updated;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("DemoObject [name=%s, longDescription=%s, tags=%s, created=%s]", name, longDescription, tags, created);
+		return String.format("DemoObject [name=%s, description=%s, attributes=%s, created=%s, updated=%s]", name, description, attributes, created, updated);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(created, longDescription, name, tags);
+		return Objects.hash(attributes, description, name);
 	}
 
 	@Override
@@ -48,8 +50,8 @@ public class SimpleDemoObject {
 		if (getClass() != obj.getClass())
 			return false;
 		SimpleDemoObject other = (SimpleDemoObject) obj;
-		return created == other.created && Objects.equals(longDescription, other.longDescription)
-				&& Objects.equals(name, other.name) && Objects.equals(tags, other.tags);
+		return Objects.equals(attributes, other.attributes) && Objects.equals(description, other.description)
+				&& Objects.equals(name, other.name);
 	}
 
 }

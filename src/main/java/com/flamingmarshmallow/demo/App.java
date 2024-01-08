@@ -1,24 +1,15 @@
 package com.flamingmarshmallow.demo;
 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.flamingmarshmallow.demo.service.DemoService;
+import com.flamingmarshmallow.demo.service.InOutService;
 import com.flamingmarshmallow.demo.service.SimpleDemoObject;
 
 /**
@@ -28,97 +19,154 @@ public class App {
 	
 	private static Logger LOGGER = LogManager.getLogger(App.class);
 	
-    public static void main( String[] args ) {
+    @SuppressWarnings("unused")
+	public static void main( String[] args ) {
     	
     	//TODO read args
-    	
-    	DemoService service = new DemoService();
-    	
-    	try {
-			service.load("data.jsonp");
-		} catch (IOException | URISyntaxException ex) {
-			LOGGER.error("can't load data file: {}", ex);
-			System.exit(1);
-		}
+  	
+    	InOutService<String, SimpleDemoObject> service = DemoService.getBuilder().withDemoData("data.jsonp").build();
+
 
     	try {
-    		UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-    	} catch (Exception ex) {
-    		LOGGER.error("oopsy: {}", ex);
+    		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    	} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
     	}
     	
     	LOGGER.info("starting...");
-//    	launchGui();
-    	@SuppressWarnings("unused")
-		AppFrame frame = new AppFrame(service);
-    	frame.pack(); //without this, we have to resize the window to get the panels to appear???
-    }
-    
-    
-    @SuppressWarnings("serial")
-	public static class AppFrame extends JFrame {
-    	public AppFrame(final DemoService service) {
-    		setSize(500, 500);
-    		setTitle("Swing Demo");
-    		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//    		setLocation(400, 0);
-    		setVisible(true);
-    		
-    		AppPanel panel = new AppPanel(service);
-    		add(panel);
-    	}
-    }
-    
-    @SuppressWarnings("serial")
-	public static class AppPanel extends JSplitPane {
     	
-        public AppPanel(final DemoService service) {
-        	JPanel searchPanel = new JPanel();
-        	JTextField searchText = new JTextField(16);
-        	JButton searchButton = new JButton("search");
-        	searchButton.addActionListener(new SearchListener(service, searchText));
-        	
-        	searchPanel.add(searchText);
-        	searchPanel.add(searchButton);
-        	
-        	
-        	JPanel dataPanel = new JPanel();
-        	JTextArea dataText = new JTextArea(10, 10);
-        	dataPanel.add(dataText);
-        	
-        	this.setOrientation(SwingConstants.HORIZONTAL);
-        	this.setTopComponent(searchPanel);
-        	this.setBottomComponent(dataPanel);
-        	
-//        	JSplitPane splitPane = new JSplitPane(SwingConstants.HORIZONTAL, searchPanel, dataPanel);
-        }
-        
+//		@SuppressWarnings("unused")
+//		AppFrame frame = new AppFrame(service, 1500, 1000, "Swing Demo");
+    	
+    	JFrame frame = new AppGui(service, "demo app");
+    	
     }
     
-    public static class SearchListener implements ActionListener {
+}
 
-    	private final DemoService service;
-    	private final JTextField text;
-    	
-    	SearchListener(final DemoService service, final JTextField text) {
-    		this.service = service;
-    		this.text = text;
-    	}
-    	
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			LOGGER.info("action called: {}", e);
-			String cmd = e.getActionCommand();
-			LOGGER.info("command: {}, {}", cmd, cmd.equals("search"));
-			if (cmd.equals("search")) {
-				LOGGER.info("calling for my object: {}", this.text.getText());
-				SimpleDemoObject obj = this.service.get(this.text.getText());
-				LOGGER.info("Loaded object: {}", obj);
-			}
-		}
-    	
-    }
-    
+
+//    
+//    @SuppressWarnings("serial")
+//	public static class AppFrame extends JFrame {
+//    	public AppFrame(final InOutService<String, SimpleDemoObject>  service, final int width, final int height, final String title) {
+//    		setSize(width, height);
+//    		setTitle(title);
+//    		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    		setLayout(new BorderLayout());
+////    		setLocation(400, 0);
+//    		setSize(new Dimension(1500,1000));
+//    		setVisible(true);
+//    		
+//    		AppPanel panel = new AppPanel(service);
+//    		getContentPane().add(panel);
+//    		
+//    		pack(); //without this, we have to resize the window to get the panels to appear???
+////            setLocationRelativeTo(null);
+////            setVisible(true);
+//    	}
+//    }
+//    
+//    @SuppressWarnings("serial")
+//	public static class AppPanel extends JPanel {
+//    	
+//        public AppPanel(final InOutService<String, SimpleDemoObject>  service) {
+//        	
+//        	JSplitPane splitPane = new JSplitPane();
+//        	
+//        	splitPane.setOrientation(SwingConstants.HORIZONTAL);
+//
+//        	final DetailPanel detailPanel = new DetailPanel();
+//        	
+//        	splitPane.setTopComponent(new SearchPanel(service, (k, v) -> detailPanel.updateData(k, v)));
+//        	splitPane.setBottomComponent(detailPanel);
+//
+////        	JSplitPane splitPane = new JSplitPane(SwingConstants.HORIZONTAL, searchPanel, dataPanel);
+//        	setLayout(new BorderLayout());
+//        }
+//        
+//    }
+//    
+//    @SuppressWarnings("serial")
+//	public static class SearchPanel extends JPanel {
+//    	
+//    	public SearchPanel(final InOutService<String, SimpleDemoObject> service, final BiConsumer<String, SimpleDemoObject> searchSuccessUpdate) {
+//    		JTextField searchText = new JTextField(16);
+//        	JButton searchButton = new JButton("search");
+//        	searchButton.addActionListener(new SearchListener(service, searchText, searchSuccessUpdate));
+//        	this.add(searchText);
+//        	this.add(searchButton);
+//    	}
+//    	
+//    }
+//
+//	@SuppressWarnings("serial")
+//	public static class DetailPanel extends JPanel {
+//
+//    	@SuppressWarnings("unused")
+//		private String key;
+//    	@SuppressWarnings("unused")
+//		private SimpleDemoObject obj;
+//    	
+//    	private JTextField nameText;
+//		
+//		public DetailPanel() {
+//			SpringLayout layout = new SpringLayout();
+//			setLayout(layout);
+//			
+//			//TODO put the key visible also
+//			JLabel nameLabel = new JLabel("name");
+//			layout.putConstraint(SpringLayout.NORTH, nameLabel, 7, SpringLayout.NORTH, this);
+//			layout.putConstraint(SpringLayout.WEST, nameLabel, 88, SpringLayout.WEST,  this);
+//
+//			nameText = new JTextField();
+//			layout.putConstraint(SpringLayout.NORTH, nameText, 7, SpringLayout.NORTH, this);
+//			layout.putConstraint(SpringLayout.WEST, nameText, 5, SpringLayout.EAST, nameLabel);
+//			layout.putConstraint(SpringLayout.EAST, nameText, 200, SpringLayout.WEST, nameLabel);
+//
+//			add(nameText);
+////			nameText.setColumns(10);
+//
+//		}
+//        
+//        public void updateData(final String key, final SimpleDemoObject obj) {
+//        	this.key = key;
+//        	this.obj = obj;
+//        	
+//        	this.nameText.setText(obj.name);
+//        }
+//		
+//	}
+//
+//    
+//    public static class SearchListener implements ActionListener {
+//
+//    	private final InOutService<String, SimpleDemoObject>  service;
+//    	private final JTextField text;
+//    	private final BiConsumer<String, SimpleDemoObject> searchSuccessUpdate;
+//    	
+//    	SearchListener(final InOutService<String, SimpleDemoObject>  service, final JTextField text, final BiConsumer<String, SimpleDemoObject> updateFunction) {
+//    		this.service = service;
+//    		this.text = text;
+//    		this.searchSuccessUpdate = updateFunction;
+//    	}
+//    	
+//		@Override
+//		public void actionPerformed(ActionEvent e) {
+//			LOGGER.info("action called: {}", e);
+//			String cmd = e.getActionCommand();
+//			LOGGER.info("command: {}, {}", cmd, cmd.equals("search"));
+//			if (cmd.equals("search")) {
+//				final String key = this.text.getText();
+//				LOGGER.info("calling for my object: {}", key);
+//				SimpleDemoObject obj = this.service.get(key);
+//				LOGGER.info("Loaded object: {}", obj);
+//				this.searchSuccessUpdate.accept(key, obj);
+//			}
+//		}
+//    	
+//    }
+//    
+//}
+//    
 //  public static class SearchField implements ActionListener {
 //	
 //	private final JTextField textField = new JTextField(16);
@@ -217,5 +265,3 @@ public class App {
 //    }
 //    
 
-    
-}

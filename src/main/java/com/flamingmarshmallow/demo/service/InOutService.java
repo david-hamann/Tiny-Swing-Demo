@@ -1,7 +1,10 @@
 package com.flamingmarshmallow.demo.service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.lang.UnsupportedOperationException;
 
 /**
  * A simple service interface.
@@ -13,17 +16,25 @@ public interface InOutService<K, V> {
 	
 	public V get(final K key);
 	
-	public default List<V> getAll(final K[] keys) { //(final K... keys) {
+	public default Map<K, V> getAll(final K[] keys) { //(final K... keys) {
 		return this.getAll(Set.of(keys));
 	}
 	
-	public List<V> getAll(final Set<K> keys);
+	public default Map<K, V> getAll(final Set<K> keys) {
+		throw new UnsupportedOperationException();
+	}
 	
 	public void save(final K key, final V obj);
 
 	public void delete(final K key);
 	
-	public default List<V> getAll(final int offset, final int limit) {
+	/**
+	 * Supports insertion ordering through a LinkedHashMap.
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	public default LinkedHashMap<K, V> getAll(final int offset, final int limit) {
 		throw new UnsupportedOperationException();
 	}
 
