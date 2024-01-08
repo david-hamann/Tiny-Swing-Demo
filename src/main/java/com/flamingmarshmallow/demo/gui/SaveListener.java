@@ -18,11 +18,14 @@ public class SaveListener implements ActionListener {
 	SaveListener(final Supplier<String> saveFunction) {
 		this.saveFunction = saveFunction;
 	}
-	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+//		
+//		if (e.getActionCommand().equals("save")) {
+//			performSave();
+//		}
+//		
 		final int response = JOptionPane.showConfirmDialog(null, "Save?", "Confirm Save", JOptionPane.YES_NO_OPTION);
 		if (response == JOptionPane.NO_OPTION) {
 			return;

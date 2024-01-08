@@ -25,7 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 
-import com.flamingmarshmallow.demo.gui.AppGui.FormLabel;
 import com.flamingmarshmallow.demo.service.InOutService;
 import com.flamingmarshmallow.demo.service.SimpleDemoObject;
 
@@ -51,6 +50,7 @@ public class DataPane extends JPanel {
 		
 		//formPanel
 		JPanel formPanel = new JPanel();
+		formPanel.setBackground(Color.WHITE);
 		formPanel.setLayout(new GridBagLayout());
 		formPanel.setBorder(BorderFactory.createEmptyBorder(25,25,25,25));
 		
@@ -88,17 +88,18 @@ public class DataPane extends JPanel {
 		
 		//metadataPanel
 		JPanel datePanel = new JPanel();
+		datePanel.setLayout(new GridBagLayout());
 		datePanel.setBackground(Color.WHITE);
 		
 		updatedLabel = new JLabel("");
 		updatedLabel.setForeground(Color.BLUE);
 		updatedLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		datePanel.add(updatedLabel);
+		datePanel.add(updatedLabel, getGBConstraint(0,0));
 
 		createdLabel = new JLabel("");
 		createdLabel.setForeground(Color.BLUE);
 		createdLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		datePanel.add(createdLabel);
+		datePanel.add(createdLabel, getGBConstraint(0,1));
 		
 		add(datePanel);
 		
@@ -107,6 +108,7 @@ public class DataPane extends JPanel {
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
+		buttonPanel.setBackground(Color.CYAN);
 		
 
 
@@ -165,6 +167,11 @@ public class DataPane extends JPanel {
 
 	}
 	
+	/**
+	 * Save changes to the form.  Checks that there are changes made before calling the save methods.
+	 * @param service
+	 * @return
+	 */
 	private final String saveChanges(final InOutService<Long, SimpleDemoObject> service) {
 		final long updateDate = Instant.now().toEpochMilli();
 		final String attributes = this.attributesText.getText();

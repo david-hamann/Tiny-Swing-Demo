@@ -1,6 +1,7 @@
 package com.flamingmarshmallow.demo.gui;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import java.util.function.BiConsumer;
 
 import javax.swing.JButton;
@@ -16,12 +17,19 @@ public class SearchPane extends JPanel {
 	public SearchPane(final BiConsumer<Long, SimpleDemoObject> searchSuccessUpdate, final InOutService<Long, SimpleDemoObject> service) {
 
 		JTextField searchText = new JTextField(16);
-    	JButton searchButton = new JButton("search");
+//		searchText.setOpaque(true);
+		searchText.setBackground(Color.WHITE);
+		
+		JButton searchButton = new JButton("search");
 
-    	searchButton.addActionListener(new SearchListener(service, searchText, searchSuccessUpdate));
+		ActionListener searchListener = new SearchListener(service, searchText, searchSuccessUpdate);
+		
+		searchText.addActionListener(searchListener);
+    	searchButton.addActionListener(searchListener);
+    	
     	add(searchText);
     	add(searchButton);
-    	setBackground(Color.WHITE);
+    	setBackground(Color.CYAN);
 	}
 	
 }

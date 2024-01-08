@@ -2,6 +2,7 @@ package com.flamingmarshmallow.demo.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -32,7 +33,7 @@ public class SearchListener implements ActionListener {
 		LOGGER.info("action called: {}", e);
 		String cmd = e.getActionCommand();
 		LOGGER.info("command: {}, {}", cmd, cmd.equals("search"));
-		if (cmd.equals("search")) {
+		if (e.getSource().equals(this.text) || cmd.equals("search")) {
 			try {
 				final Long key = Long.valueOf(this.text.getText());
 				LOGGER.info("calling for my object: {}", key);
