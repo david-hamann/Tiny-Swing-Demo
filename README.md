@@ -34,7 +34,7 @@ Once one of the objects are displayed, you can update everything, except the ID,
 The data element consists of the following fields
 
 ```java
-public class SimpleDemoObject {
+public class Widget {
 	public final String name;
 	public final String description;
 	public final List<String> attributes;
