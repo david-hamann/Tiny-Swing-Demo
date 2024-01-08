@@ -25,7 +25,7 @@ public class App {
     	
     	//TODO read args
   	
-    	InOutService<Long, SimpleDemoObject> service = DemoService.getBuilder().withDemoData("data.jsonp").build();
+    	InOutService<Long, SimpleDemoObject> service = DemoService.getBuilder().withDemoData("data.jsonl").build();
 
 
     	try {
