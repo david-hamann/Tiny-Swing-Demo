@@ -198,8 +198,9 @@ public class DataPane extends JPanel {
 				this.nameText.getText(),
 				this.descriptionText.getText(),
 				attributeList,
-				this.currentObj.created,
+				this.currentKey <= 0 ? updateDate : this.currentObj.created,
 				updateDate);
+		
 		if (updated.equals(SimpleDemoObject.EMPTY)) {
 			return "object is empty";
 		}

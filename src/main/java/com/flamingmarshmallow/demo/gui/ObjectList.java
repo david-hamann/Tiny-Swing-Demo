@@ -3,6 +3,7 @@ package com.flamingmarshmallow.demo.gui;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 
@@ -38,10 +39,9 @@ public class ObjectList extends JList<Map.Entry<Long, SimpleDemoObject>> {
 		addListSelectionListener(new ListSelectionListener() {
 
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				Map.Entry<Long, SimpleDemoObject> entry = ObjectList.this.getSelectedValue();
-				LOGGER.trace("selected: {}", entry);
-				selectionComsumer.accept(entry.getKey(), entry.getValue());
+			public void valueChanged(ListSelectionEvent event) {
+				Optional.ofNullable(ObjectList.this.getSelectedValue())
+					    .ifPresent(e -> selectionComsumer.accept(e.getKey(), e.getValue()));
 			}
 			
 		});
@@ -58,3 +58,26 @@ public class ObjectList extends JList<Map.Entry<Long, SimpleDemoObject>> {
 	//TODO add paging...
 	
 }
+
+/*
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException: Cannot invoke "java.util.Map$Entry.getKey()" because "entry" is null
+	at com.flamingmarshmallow.demo.gui.ObjectList$1.valueChanged(ObjectList.java:44)
+	at java.desktop/javax.swing.JList.fireSelectionValueChanged(JList.java:1831)
+	at java.desktop/javax.swing.JList$ListSelectionHandler.valueChanged(JList.java:1845)
+	at java.desktop/javax.swing.DefaultListSelectionModel.fireValueChanged(DefaultListSelectionModel.java:224)
+	at java.desktop/javax.swing.DefaultListSelectionModel.fireValueChanged(DefaultListSelectionModel.java:204)
+	at java.desktop/javax.swing.DefaultListSelectionModel.fireValueChanged(DefaultListSelectionModel.java:251)
+	at java.desktop/javax.swing.DefaultListSelectionModel.changeSelection(DefaultListSelectionModel.java:448)
+	at java.desktop/javax.swing.DefaultListSelectionModel.changeSelection(DefaultListSelectionModel.java:458)
+	at java.desktop/javax.swing.DefaultListSelectionModel.removeSelectionIntervalImpl(DefaultListSelectionModel.java:619)
+	at java.desktop/javax.swing.DefaultListSelectionModel.clearSelection(DefaultListSelectionModel.java:463)
+	at java.desktop/javax.swing.JList.clearSelection(JList.java:2082)
+	at java.desktop/javax.swing.JList.setModel(JList.java:1712)
+	at java.desktop/javax.swing.JList.setListData(JList.java:1753)
+	at com.flamingmarshmallow.demo.gui.ObjectList.updateListing(ObjectList.java:55)
+	at com.flamingmarshmallow.demo.gui.AppPane.lambda$new$1(AppPane.java:25)
+	at com.flamingmarshmallow.demo.gui.DataPane.saveChanges(DataPane.java:219)
+	at com.flamingmarshmallow.demo.gui.DataPane.lambda$new$0(DataPane.java:146)
+	at com.flamingmarshmallow.demo.gui.SaveListener.actionPerformed(SaveListener.java:35)
+	at java.desktop/javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1972)
+*/
