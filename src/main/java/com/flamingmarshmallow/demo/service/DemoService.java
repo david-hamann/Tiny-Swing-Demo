@@ -3,12 +3,13 @@ package com.flamingmarshmallow.demo.service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.IllegalArgumentException;
 import java.net.URISyntaxException;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,14 +19,55 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DemoService implements InOutService<String, SimpleDemoObject> {
+public class DemoService implements InOutService<Long, SimpleDemoObject> {
 	
 	private static final Logger LOGGER = LogManager.getLogger(DemoService.class);
 	
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	
-	private final Map<String, SimpleDemoObject> data = Collections.synchronizedMap(new HashMap<String, SimpleDemoObject>());
+	private final Map<Long, SimpleDemoObject> data = Collections.synchronizedMap(new LinkedHashMap<Long, SimpleDemoObject>());
+	
+	/**
+	 * InOutService<String, SimpleDemoObject> service = DemoService.Builder().withDemoData().build();
+	 */
+	public static class Builder {
+		
+		private String dataFile = "";
+		private boolean exitOnError = false;
 
+		private Builder() {
+			//empty
+		}
+		
+		public Builder withDemoData(final String dataFile) {
+			return this.withDemoData(dataFile, false);
+		}
+
+		public Builder withDemoData(final String dataFile, final boolean exitOnError) {
+			this.dataFile = dataFile;
+			return this;
+		}
+		
+		public InOutService<Long, SimpleDemoObject> build() {
+			DemoService service = new DemoService();
+			try {
+				service.load(this.dataFile);
+			} catch (IOException | URISyntaxException ex) {
+				LOGGER.error("can't load data file: {}", ex);
+				if (exitOnError) {
+					LOGGER.error("Exiting due to error");
+					System.exit(1);
+				}
+			}
+			return service;
+		}
+		
+	}
+	
+	public static Builder getBuilder() {
+		return new Builder();
+	}
+	
 	
 	/**
 	 * Loads data from file on the package path.
@@ -37,21 +79,20 @@ public class DemoService implements InOutService<String, SimpleDemoObject> {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(filename)))) {
 			String line = null;
 			while ((line = reader.readLine()) != null) {
-				
 				DataFileLine data = OBJECT_MAPPER.readValue(line, DataFileLine.class);
-				
 				this.data.put(data.key, data.value);
+				LOGGER.info("loaded data into db: key={}", data.key);
 			}
 		}
 		LOGGER.debug("data: {}", data);
 	}
 	
 	static class DataFileLine {
-		private String key;
+		private Long key;
 		private SimpleDemoObject value;
 		
 		@JsonCreator
-		public DataFileLine(@JsonProperty("key") final String key, @JsonProperty("value") final SimpleDemoObject value) {
+		public DataFileLine(@JsonProperty("key") final Long key, @JsonProperty("value") final SimpleDemoObject value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -60,26 +101,57 @@ public class DemoService implements InOutService<String, SimpleDemoObject> {
 	
 	
 	@Override
-	public SimpleDemoObject get(String key) {
+	public SimpleDemoObject get(Long key) {
 		return this.data.get(key);
 	}
-
+	
 	@Override
-	public List<SimpleDemoObject> getAll(Set<String> keys) {
+	public Map<Long, SimpleDemoObject> getAll(final Set<Long> keys) {
 		return this.data.entrySet().stream()
-				   .filter(a -> keys.contains(a.getKey()))
-				   .map(Map.Entry::getValue)
-				   .collect(Collectors.toList());
+				   .filter(e -> keys.contains(e.getKey()))
+	 	           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
+	}
+	
+	/**
+	 * Uses a LinkedHashMap implementation.
+	 */
+	@Override
+	public LinkedHashMap<Long, SimpleDemoObject> getAll(final int offset, final int limit) {
+		if (offset < 0 || offset >= this.data.size() || limit < 0) {
+			throw new IllegalArgumentException();
+		}
+		if (this.data.size() == 0) {
+			return new LinkedHashMap<>();
+		}
+		
+		return this.data.entrySet().stream()
+	 	           .skip(offset)
+	 	           .limit(limit)
+	 	           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
+	}
+	
+	@Override
+	public Long save(SimpleDemoObject obj) {
+		long newId;
+		do {
+			newId = ThreadLocalRandom.current().nextLong(10000, 100000);
+		} while (this.data.keySet().contains(newId));
+		this.save(newId, obj);
+		return newId;
 	}
 
 	@Override
-	public void save(String key, SimpleDemoObject obj) {
+	public void save(Long key, SimpleDemoObject obj) {
 		this.data.put(key, obj);
 	}
 
 	@Override
-	public void delete(String key) {
+	public void delete(Long key) {
 		this.data.remove(key);
+	}
+	
+	Map<Long, SimpleDemoObject> dump() {
+		return Collections.unmodifiableMap(this.data);
 	}
 	
 }
