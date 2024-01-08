@@ -4,6 +4,7 @@
 [![build](https://github.com/david-hamann/Tiny-Swing-Demo/actions/workflows/maven.yml/badge.svg)](https://github.com/david-hamann/Tiny-Swing-Demo/actions/workflows/maven.yml)
 
 <!--- TODO add coverage and other tags --->
+[//]: # (TODO add coverage and other tags)
 
 
 
