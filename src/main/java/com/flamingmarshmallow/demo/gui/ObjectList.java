@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Vector;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +20,10 @@ import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
 public class ObjectList extends JList<Map.Entry<Long, Widget>> {
+	
+	public static enum Page {
+		HAS_PREV, HAS_NEXT;
+	}
 	
 	private static Logger LOGGER = LogManager.getLogger(ObjectList.class);
 	
@@ -56,6 +61,20 @@ public class ObjectList extends JList<Map.Entry<Long, Widget>> {
 	}
 	
 	//TODO add paging...
+	
+	public void changePage(final NavAction action, final Consumer<Page> consumer) {
+		switch (action) {
+		case NEXT:
+			LOGGER.info("next page");
+			break;
+		case PREV:
+			LOGGER.info("last page");
+			break;
+		}
+		
+		//callback with current state of paging
+		consumer.accept(Page.HAS_NEXT);
+	}
 	
 }
 
