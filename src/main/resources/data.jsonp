@@ -1,2 +1,2 @@
-{"key":"123456", "value":{"name":"part zero", "longDescription":"this is the first data object in my set", "tags":["zero","parts","demo"], "created":1704536280000}}
-{"key":"next", "value":{"name":"radiator", "longDescription":"radiator", "tags":["cooling","parts"], "created":1704536290000}}
+{"key":123456, "value":{"name":"part zero", "longDescription":"this is the first data object in my set", "tags":["zero","parts","demo"], "created":1704536280000}}
+{"key":123455, "value":{"name":"radiator", "longDescription":"radiator", "tags":["cooling","parts"], "created":1704536290000}}

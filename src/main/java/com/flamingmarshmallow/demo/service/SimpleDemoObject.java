@@ -17,6 +17,9 @@ public class SimpleDemoObject {
 	public final List<String> attributes;
 	public final long created;
 	public final long updated;
+
+	
+	public static final SimpleDemoObject EMPTY = new SimpleDemoObject("", "", Collections.emptyList(), 0, 0);
 	
 	@JsonCreator
 	public SimpleDemoObject(@JsonProperty("name") final String name,

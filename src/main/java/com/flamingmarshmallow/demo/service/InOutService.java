@@ -24,6 +24,12 @@ public interface InOutService<K, V> {
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * Saves an object and returns the new key.
+	 * @param obj
+	 */
+	public K save(final V obj);
+	
 	public void save(final K key, final V obj);
 
 	public void delete(final K key);
