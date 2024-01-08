@@ -16,8 +16,7 @@ public class SearchPane extends JPanel {
 	
 	public SearchPane(final BiConsumer<Long, SimpleDemoObject> searchSuccessUpdate, final InOutService<Long, SimpleDemoObject> service) {
 
-		JTextField searchText = new JTextField(16);
-//		searchText.setOpaque(true);
+		JTextField searchText = new TextField(16);
 		searchText.setBackground(Color.WHITE);
 		
 		JButton searchButton = new JButton("search");

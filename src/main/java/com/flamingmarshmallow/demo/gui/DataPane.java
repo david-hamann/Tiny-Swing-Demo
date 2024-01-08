@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.Instant;
@@ -18,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -39,7 +41,7 @@ public class DataPane extends JPanel {
 	private JTextField nameText;
 	private JTextArea descriptionText;
 	private JTextField attributesText;
-	private JTextField keyText;
+	private FormLabel keyText;
 	private JLabel updatedLabel;
 	private JLabel createdLabel;
 	
@@ -56,17 +58,13 @@ public class DataPane extends JPanel {
 		
 		JLabel keyLabel = new FormLabel("Part ID");
 		formPanel.add(keyLabel, getGBConstraint(0,0));
-		keyText = new JTextField(10);
-		keyText.setEnabled(false);
-		keyText.setForeground(Color.RED);
-		keyText.setBackground(Color.LIGHT_GRAY);
-		keyLabel.setLabelFor(keyText);
+		keyText = new FormLabel("");
 		formPanel.add(keyText, getGBConstraint(1,0));
 
 		JLabel nameLabel = new FormLabel("Name");
 		formPanel.add(nameLabel, getGBConstraint(0,1));
 		
-		nameText = new JTextField(10);
+		nameText = new TextField(10);
 		nameLabel.setLabelFor(nameText);
 		formPanel.add(nameText, getGBConstraint(1,1));
 		
@@ -75,12 +73,15 @@ public class DataPane extends JPanel {
 		
 		descriptionText = new JTextArea();
 		descriptionText.setRows(10);
+		descriptionText.setBackground(Color.WHITE);
+		descriptionText.setForeground(Color.BLACK);
 		descriptionLabel.setLabelFor(descriptionText);
-		formPanel.add(descriptionText, getGBConstraint(1,2));
-
+		
+		JScrollPane descriptionPane = new JScrollPane(descriptionText);
+		formPanel.add(descriptionPane, getGBConstraint(1,2));
 		JLabel attributesLabel = new FormLabel("Attributes");
 		formPanel.add(attributesLabel, getGBConstraint(0,3));
-		attributesText = new JTextField(10);
+		attributesText = new TextField(10);
 		attributesLabel.setLabelFor(attributesText);
 		formPanel.add(attributesText, getGBConstraint(1,3));
 		
@@ -120,6 +121,7 @@ public class DataPane extends JPanel {
 				clearForm();
 			}
 		});
+		clearButton.setToolTipText("clear all fields");
 		buttonPanel.add(clearButton);
 		
 		JButton resetButton = new JButton("reset");
@@ -129,10 +131,12 @@ public class DataPane extends JPanel {
 				resetForm();
 			}
 		});
+		resetButton.setToolTipText("undo any changes made");
 		buttonPanel.add(resetButton);
 		
 		JButton saveButton = new JButton("save");
 		saveButton.addActionListener(new SaveListener(() -> this.saveChanges(service)));
+		saveButton.setToolTipText("save new or changed object");
 		buttonPanel.add(saveButton);
 		
 		add(buttonPanel);
@@ -145,6 +149,7 @@ public class DataPane extends JPanel {
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = x;
 		constraints.gridy = y;
+		constraints.insets = new Insets(3,3,3,3);
 		return constraints;
 	}
 	
