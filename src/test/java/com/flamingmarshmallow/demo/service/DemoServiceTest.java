@@ -84,7 +84,7 @@ class DemoServiceTest {
 					service.getAll(test.offset, test.limit);
 				}, test.toString());
 			} else {
-				Map<Long, SimpleDemoObject> m = service.getAll(test.offset, test.limit);
+				List<Map.Entry<Long, SimpleDemoObject>> m = service.getAll(test.offset, test.limit);
 				Assertions.assertEquals(test.expected, m.size(), test.toString());
 			}
 			

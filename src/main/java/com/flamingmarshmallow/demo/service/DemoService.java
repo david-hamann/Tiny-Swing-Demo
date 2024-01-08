@@ -3,10 +3,10 @@ package com.flamingmarshmallow.demo.service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.IllegalArgumentException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -116,18 +116,18 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 	 * Uses a LinkedHashMap implementation.
 	 */
 	@Override
-	public LinkedHashMap<Long, SimpleDemoObject> getAll(final int offset, final int limit) {
+	public List<Map.Entry<Long, SimpleDemoObject>> getAll(final int offset, final int limit) {
 		if (offset < 0 || offset >= this.data.size() || limit < 0) {
 			throw new IllegalArgumentException();
 		}
 		if (this.data.size() == 0) {
-			return new LinkedHashMap<>();
+			return Collections.emptyList();
 		}
 		
 		return this.data.entrySet().stream()
 	 	           .skip(offset)
 	 	           .limit(limit)
-	 	           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
+	 	           .collect(Collectors.toList());
 	}
 	
 	@Override
