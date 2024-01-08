@@ -3,10 +3,6 @@ package com.flamingmarshmallow.demo.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -17,8 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.flamingmarshmallow.demo.service.InOutService;
 import com.flamingmarshmallow.demo.service.SimpleDemoObject;
-
-//import layout.SpringUtilities;
 
 @SuppressWarnings("serial")
 public class AppGui extends JFrame {
@@ -49,14 +43,5 @@ public class AppGui extends JFrame {
     		
 		});
 	}
-	
-	static String prettyDate(final long timestamp) {
-		if (timestamp <= 0) {
-			return "";
-		}
-		return ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
-				.format(DateTimeFormatter.ISO_DATE_TIME);
-	}
-	
 	
 }

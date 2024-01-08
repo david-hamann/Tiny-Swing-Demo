@@ -3,7 +3,7 @@
 
 This is a very quickly built demo using Java Swing.  It is rough around the edges, but it should be relatively bug free.
 
-Minimal unit tests have been written at this point, but there is one unit test given for flavor.  Anything beyond demo code would warrant more thoroughness.
+Minimal unit tests have been written at this point, but there is one unit test given for flavor.  Anything beyond demo code would warrant more thorough testing.
 
 ## Prerequisites
 
@@ -30,6 +30,21 @@ Executing `./run` from the root of the project will build, test, create the shad
 Start by searching for an element ID.  "Search" is misnamed, since it is an ID lookup.  To start out, enter `123455` or `123456` into the search field, and perform the search.  These two objects are loaded into a demo data-store at startup.
 
 Once one of the objects are displayed, you can update everything, except the ID, and save the change back to the data store.  If you press the "clear" button, you reset the form to a blank, and you can enter values, and save which will save to the datastore and display the new object ID.
+
+The data element consists of the following fields
+
+```java
+public class SimpleDemoObject {
+	public final String name;
+	public final String description;
+	public final List<String> attributes;
+	public final long created;
+	public final long updated;
+}
+```
+The attributes are represented in the form by a comma-delimitted string.
+
+
 
 The buttons along the lower edge of the form perform the following actions.
 <dl>

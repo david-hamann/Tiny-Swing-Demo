@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +30,7 @@ import org.apache.logging.log4j.util.Strings;
 
 import com.flamingmarshmallow.demo.service.InOutService;
 import com.flamingmarshmallow.demo.service.SimpleDemoObject;
+import com.flamingmarshmallow.demo.utils.DateUtils;
 
 @SuppressWarnings("serial")
 public class DataPane extends JPanel {
@@ -54,11 +56,12 @@ public class DataPane extends JPanel {
 		JPanel formPanel = new JPanel();
 		formPanel.setBackground(Color.WHITE);
 		formPanel.setLayout(new GridBagLayout());
-		formPanel.setBorder(BorderFactory.createEmptyBorder(25,25,25,25));
+//		formPanel.setBorder(BorderFactory.createEmptyBorder(25,25,25,25));
 		
 		JLabel keyLabel = new FormLabel("Part ID");
 		formPanel.add(keyLabel, getGBConstraint(0,0));
 		keyText = new FormLabel("");
+		keyText.setHorizontalAlignment(SwingConstants.LEFT);
 		formPanel.add(keyText, getGBConstraint(1,0));
 
 		JLabel nameLabel = new FormLabel("Name");
@@ -104,14 +107,11 @@ public class DataPane extends JPanel {
 		
 		add(datePanel);
 		
+		
 		//buttonPane
-		//save changes opens a modal, asking for an id
-
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
 		buttonPanel.setBackground(Color.CYAN);
-		
-
 
 		//clears the form, so we can create a new object
 		JButton clearButton = new JButton("clear");
@@ -156,7 +156,7 @@ public class DataPane extends JPanel {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(500,1000);
+		return new Dimension(500, 500);
 	}
 	
 	public void updateData(final Long key, final SimpleDemoObject obj) {
@@ -167,8 +167,8 @@ public class DataPane extends JPanel {
 		this.nameText.setText(obj.name);
 		this.descriptionText.setText(obj.description);
 		this.attributesText.setText(String.join(",", obj.attributes));
-		this.updatedLabel.setText("updated: " + AppGui.prettyDate(obj.updated));
-		this.createdLabel.setText("created: " + AppGui.prettyDate(obj.created));
+		this.updatedLabel.setText("updated: " + DateUtils.prettyDate(obj.updated));
+		this.createdLabel.setText("created: " + DateUtils.prettyDate(obj.created));
 
 	}
 	
@@ -205,7 +205,7 @@ public class DataPane extends JPanel {
 			return null;
 		}
 		service.save(this.currentKey, updated);
-		this.updatedLabel.setText("updated: " + AppGui.prettyDate(updateDate));
+		this.updatedLabel.setText("updated: " + DateUtils.prettyDate(updateDate));
 		return null;
 	}
 

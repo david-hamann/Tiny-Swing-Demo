@@ -111,6 +111,25 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 				   .filter(e -> keys.contains(e.getKey()))
 	 	           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
 	}
+
+	/**
+	 * Returns if the name includes the search term.
+	 */
+	@Override
+	public List<Map.Entry<Long, SimpleDemoObject>> search(final String searchTerm, final int offset, final int limit) {
+		if (offset < 0 || offset >= this.data.size() || limit < 0) {
+			throw new IllegalArgumentException();
+		}
+		if (this.data.size() == 0) {
+			return Collections.emptyList();
+		}
+		
+		return this.data.entrySet().stream()
+				.filter(e -> e.getValue().name.indexOf(searchTerm) >= 0)
+				.skip(offset)
+				.limit(limit)
+				.collect(Collectors.toList());
+	}
 	
 	/**
 	 * Uses a LinkedHashMap implementation.
