@@ -10,11 +10,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -46,6 +48,12 @@ public class DataPane extends JPanel {
 	private FormLabel keyText;
 	private JLabel updatedLabel;
 	private JLabel createdLabel;
+	
+	private List<BiConsumer<Long, SimpleDemoObject>> saveConsumers = Collections.synchronizedList(new ArrayList<>());
+	
+	public void registerSaveConsumer(final BiConsumer<Long, SimpleDemoObject> saveConsumer) {
+		this.saveConsumers.add(saveConsumer);
+	}
 	
 	
 	public DataPane(final InOutService<Long, SimpleDemoObject> service) {
@@ -144,7 +152,7 @@ public class DataPane extends JPanel {
 		this.updateData(0l, SimpleDemoObject.EMPTY);
 	}
 	
-	private GridBagConstraints getGBConstraint(final int x, final int y) {
+	static GridBagConstraints getGBConstraint(final int x, final int y) {
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = x;
@@ -190,8 +198,9 @@ public class DataPane extends JPanel {
 				this.nameText.getText(),
 				this.descriptionText.getText(),
 				attributeList,
-				this.currentObj.created,
+				this.currentKey <= 0 ? updateDate : this.currentObj.created,
 				updateDate);
+		
 		if (updated.equals(SimpleDemoObject.EMPTY)) {
 			return "object is empty";
 		}
@@ -202,10 +211,15 @@ public class DataPane extends JPanel {
 			final Long newId = service.save(updated);
 			LOGGER.info("Saved to new ID: {}", newId);
 			updateData(newId, updated);
-			return null;
+		} else {
+			service.save(this.currentKey, updated);
+			this.updatedLabel.setText("updated: " + DateUtils.prettyDate(updateDate));
 		}
-		service.save(this.currentKey, updated);
-		this.updatedLabel.setText("updated: " + DateUtils.prettyDate(updateDate));
+		
+		for (BiConsumer<Long, SimpleDemoObject> consumer : saveConsumers) {
+			consumer.accept(this.currentKey, updated);
+		}
+		
 		return null;
 	}
 
