@@ -15,24 +15,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.flamingmarshmallow.demo.service.InOutService;
-import com.flamingmarshmallow.demo.service.SimpleDemoObject;
+import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
-public class ObjectList extends JList<Map.Entry<Long, SimpleDemoObject>> {
+public class ObjectList extends JList<Map.Entry<Long, Widget>> {
 	
 	private static Logger LOGGER = LogManager.getLogger(ObjectList.class);
 	
 	private int offset = 0;
 	private int limit = 10;
 	
-	private final InOutService<Long, SimpleDemoObject> service;
+	private final InOutService<Long, Widget> service;
 	
 	/**
 	 * A list of elements in the dataset.
 	 * @param service
 	 * @param selectionComsumer
 	 */
-	ObjectList(final InOutService<Long, SimpleDemoObject> service, final BiConsumer<Long, SimpleDemoObject> selectionComsumer) {
+	ObjectList(final InOutService<Long, Widget> service, final BiConsumer<Long, Widget> selectionComsumer) {
 		this.service = service;
 		this.setCellRenderer(new ObjectCellRenderer());
 
@@ -51,7 +51,7 @@ public class ObjectList extends JList<Map.Entry<Long, SimpleDemoObject>> {
 	
 	public void updateListing() {
 		LOGGER.info("refreshing listing");
-		List<Entry<Long, SimpleDemoObject>> page = service.getAll(offset, limit);
+		List<Entry<Long, Widget>> page = service.getAll(offset, limit);
 		this.setListData(new Vector<>(page));
 	}
 	

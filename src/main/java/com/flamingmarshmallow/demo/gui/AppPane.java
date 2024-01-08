@@ -10,17 +10,17 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import com.flamingmarshmallow.demo.service.InOutService;
-import com.flamingmarshmallow.demo.service.SimpleDemoObject;
+import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
 public class AppPane extends JPanel {
 
 	private final JSplitPane pane;
 	
-	public AppPane(final InOutService<Long, SimpleDemoObject> service) {
+	public AppPane(final InOutService<Long, Widget> service) {
 		
 		DataPane dataPane = new DataPane(service);
-		JList<Map.Entry<Long, SimpleDemoObject>> objectList = new ObjectList(service, (k,v) -> dataPane.updateData(k, v));
+		JList<Map.Entry<Long, Widget>> objectList = new ObjectList(service, (k,v) -> dataPane.updateData(k, v));
 		dataPane.registerSaveConsumer((l,o) -> {
 			((ObjectList) objectList).updateListing();
 		});

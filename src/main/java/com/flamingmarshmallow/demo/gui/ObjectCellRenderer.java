@@ -9,9 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import com.flamingmarshmallow.demo.service.SimpleDemoObject;
+import com.flamingmarshmallow.demo.service.Widget;
 
-public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Map.Entry<Long, SimpleDemoObject>> {
+public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Map.Entry<Long, Widget>> {
 	
 	//TODO do we need to keep track of the element's id here?
 	
@@ -20,8 +20,8 @@ public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Map.E
 	}
 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends Entry<Long, SimpleDemoObject>> list,
-			Entry<Long, SimpleDemoObject> entry, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<? extends Entry<Long, Widget>> list,
+			Entry<Long, Widget> entry, int index, boolean isSelected, boolean cellHasFocus) {
 		
 		this.setText(entry.getValue().name + " (" + entry.getKey() + ")");
 		

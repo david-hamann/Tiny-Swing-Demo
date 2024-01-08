@@ -12,16 +12,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.flamingmarshmallow.demo.service.InOutService;
-import com.flamingmarshmallow.demo.service.SimpleDemoObject;
+import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
 public class AppGui extends JFrame {
 	
 	private static Logger LOGGER = LogManager.getLogger(AppGui.class);
 	
-	final InOutService<Long, SimpleDemoObject> service;
+	final InOutService<Long, Widget> service;
 
-	public AppGui(final InOutService<Long, SimpleDemoObject> service, final String title) {
+	public AppGui(final InOutService<Long, Widget> service, final String title) {
 		this.service = service;
 		EventQueue.invokeLater(() -> {
 			try {

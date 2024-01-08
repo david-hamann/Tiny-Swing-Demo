@@ -76,7 +76,7 @@ class DemoServiceTest {
 		return tests.stream().map(test -> DynamicTest.dynamicTest(test.name, () -> {
 			DemoService service = new DemoService();
 			for (int i = 0; i < test.size; i++) {
-				service.save(Long.valueOf(i), new SimpleDemoObject("v" + i, "", Collections.emptyList(), 0, 0));
+				service.save(Long.valueOf(i), new Widget("v" + i, "", Collections.emptyList(), 0, 0));
 			}
 
 			if (test.error) {
@@ -84,7 +84,7 @@ class DemoServiceTest {
 					service.getAll(test.offset, test.limit);
 				}, test.toString());
 			} else {
-				List<Map.Entry<Long, SimpleDemoObject>> m = service.getAll(test.offset, test.limit);
+				List<Map.Entry<Long, Widget>> m = service.getAll(test.offset, test.limit);
 				Assertions.assertEquals(test.expected, m.size(), test.toString());
 			}
 			

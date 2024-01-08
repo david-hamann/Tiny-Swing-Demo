@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import com.flamingmarshmallow.demo.gui.AppGui;
 import com.flamingmarshmallow.demo.service.DemoService;
 import com.flamingmarshmallow.demo.service.InOutService;
-import com.flamingmarshmallow.demo.service.SimpleDemoObject;
+import com.flamingmarshmallow.demo.service.Widget;
 
 /**
  * A simple Swing Demo.
@@ -25,7 +25,7 @@ public class App {
     	
     	//TODO read args
   	
-    	InOutService<Long, SimpleDemoObject> service = DemoService.getBuilder().withDemoData("data.jsonl").build();
+    	InOutService<Long, Widget> service = DemoService.getBuilder().withDemoData("data.jsonl").build();
 
 
     	try {

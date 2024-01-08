@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * A simple demo object.
  */
-public class SimpleDemoObject {
+public class Widget {
 	
 	public final String name;
 	public final String description;
@@ -19,10 +19,10 @@ public class SimpleDemoObject {
 	public final long updated;
 
 	
-	public static final SimpleDemoObject EMPTY = new SimpleDemoObject("", "", Collections.emptyList(), 0, 0);
+	public static final Widget EMPTY = new Widget("", "", Collections.emptyList(), 0, 0);
 	
 	@JsonCreator
-	public SimpleDemoObject(@JsonProperty("name") final String name,
+	public Widget(@JsonProperty("name") final String name,
 							@JsonProperty("longDescription") final String longDescription,
 							@JsonProperty("tags") final List<String> tags,
 							@JsonProperty("created") final long created,
@@ -52,7 +52,7 @@ public class SimpleDemoObject {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SimpleDemoObject other = (SimpleDemoObject) obj;
+		Widget other = (Widget) obj;
 		return Objects.equals(attributes, other.attributes) && Objects.equals(description, other.description)
 				&& Objects.equals(name, other.name);
 	}

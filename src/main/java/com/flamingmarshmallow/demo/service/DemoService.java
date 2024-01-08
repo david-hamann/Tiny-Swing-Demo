@@ -19,13 +19,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DemoService implements InOutService<Long, SimpleDemoObject> {
+public class DemoService implements InOutService<Long, Widget> {
 	
 	private static final Logger LOGGER = LogManager.getLogger(DemoService.class);
 	
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	
-	private final Map<Long, SimpleDemoObject> data = Collections.synchronizedMap(new LinkedHashMap<Long, SimpleDemoObject>());
+	private final Map<Long, Widget> data = Collections.synchronizedMap(new LinkedHashMap<Long, Widget>());
 	
 	/**
 	 * InOutService<String, SimpleDemoObject> service = DemoService.Builder().withDemoData().build();
@@ -48,7 +48,7 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 			return this;
 		}
 		
-		public InOutService<Long, SimpleDemoObject> build() {
+		public InOutService<Long, Widget> build() {
 			DemoService service = new DemoService();
 			try {
 				service.load(this.dataFile);
@@ -89,10 +89,10 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 	
 	static class DataFileLine {
 		private Long key;
-		private SimpleDemoObject value;
+		private Widget value;
 		
 		@JsonCreator
-		public DataFileLine(@JsonProperty("key") final Long key, @JsonProperty("value") final SimpleDemoObject value) {
+		public DataFileLine(@JsonProperty("key") final Long key, @JsonProperty("value") final Widget value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -101,12 +101,12 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 	
 	
 	@Override
-	public SimpleDemoObject get(Long key) {
+	public Widget get(Long key) {
 		return this.data.get(key);
 	}
 	
 	@Override
-	public Map<Long, SimpleDemoObject> getAll(final Set<Long> keys) {
+	public Map<Long, Widget> getAll(final Set<Long> keys) {
 		return this.data.entrySet().stream()
 				   .filter(e -> keys.contains(e.getKey()))
 	 	           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
@@ -116,7 +116,7 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 	 * Returns if the name includes the search term.
 	 */
 	@Override
-	public List<Map.Entry<Long, SimpleDemoObject>> search(final String searchTerm, final int offset, final int limit) {
+	public List<Map.Entry<Long, Widget>> search(final String searchTerm, final int offset, final int limit) {
 		if (offset < 0 || offset >= this.data.size() || limit < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -135,7 +135,7 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 	 * Uses a LinkedHashMap implementation.
 	 */
 	@Override
-	public List<Map.Entry<Long, SimpleDemoObject>> getAll(final int offset, final int limit) {
+	public List<Map.Entry<Long, Widget>> getAll(final int offset, final int limit) {
 		if (offset < 0 || offset >= this.data.size() || limit < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -150,7 +150,7 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 	}
 	
 	@Override
-	public Long save(SimpleDemoObject obj) {
+	public Long save(Widget obj) {
 		long newId;
 		do {
 			newId = ThreadLocalRandom.current().nextLong(10000, 100000);
@@ -160,7 +160,7 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 	}
 
 	@Override
-	public void save(Long key, SimpleDemoObject obj) {
+	public void save(Long key, Widget obj) {
 		this.data.put(key, obj);
 	}
 
@@ -169,7 +169,7 @@ public class DemoService implements InOutService<Long, SimpleDemoObject> {
 		this.data.remove(key);
 	}
 	
-	Map<Long, SimpleDemoObject> dump() {
+	Map<Long, Widget> dump() {
 		return Collections.unmodifiableMap(this.data);
 	}
 	

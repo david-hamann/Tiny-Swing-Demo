@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 
 import com.flamingmarshmallow.demo.service.InOutService;
-import com.flamingmarshmallow.demo.service.SimpleDemoObject;
+import com.flamingmarshmallow.demo.service.Widget;
 import com.flamingmarshmallow.demo.utils.DateUtils;
 
 @SuppressWarnings("serial")
@@ -40,7 +40,7 @@ public class DataPane extends JPanel {
 	private static final Logger LOGGER = LogManager.getLogger(DataPane.class);
 	
 	private Long currentKey = Long.valueOf(0);
-	private SimpleDemoObject currentObj = SimpleDemoObject.EMPTY;
+	private Widget currentObj = Widget.EMPTY;
 
 	private JTextField nameText;
 	private JTextArea descriptionText;
@@ -49,14 +49,14 @@ public class DataPane extends JPanel {
 	private JLabel updatedLabel;
 	private JLabel createdLabel;
 	
-	private List<BiConsumer<Long, SimpleDemoObject>> saveConsumers = Collections.synchronizedList(new ArrayList<>());
+	private List<BiConsumer<Long, Widget>> saveConsumers = Collections.synchronizedList(new ArrayList<>());
 	
-	public void registerSaveConsumer(final BiConsumer<Long, SimpleDemoObject> saveConsumer) {
+	public void registerSaveConsumer(final BiConsumer<Long, Widget> saveConsumer) {
 		this.saveConsumers.add(saveConsumer);
 	}
 	
 	
-	public DataPane(final InOutService<Long, SimpleDemoObject> service) {
+	public DataPane(final InOutService<Long, Widget> service) {
 		setBackground(Color.WHITE);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -149,7 +149,7 @@ public class DataPane extends JPanel {
 		
 		add(buttonPanel);
 		
-		this.updateData(0l, SimpleDemoObject.EMPTY);
+		this.updateData(0l, Widget.EMPTY);
 	}
 	
 	static GridBagConstraints getGBConstraint(final int x, final int y) {
@@ -167,7 +167,7 @@ public class DataPane extends JPanel {
 		return new Dimension(500, 500);
 	}
 	
-	public void updateData(final Long key, final SimpleDemoObject obj) {
+	public void updateData(final Long key, final Widget obj) {
 		this.currentKey = key;
 		this.currentObj = obj;
 
@@ -185,7 +185,7 @@ public class DataPane extends JPanel {
 	 * @param service
 	 * @return
 	 */
-	private final String saveChanges(final InOutService<Long, SimpleDemoObject> service) {
+	private final String saveChanges(final InOutService<Long, Widget> service) {
 		final long updateDate = Instant.now().toEpochMilli();
 		final String attributes = this.attributesText.getText();
 
@@ -194,20 +194,20 @@ public class DataPane extends JPanel {
 			.filter(Strings::isNotBlank)
 			.collect(Collectors.toList());
 		
-		SimpleDemoObject updated = new SimpleDemoObject(
+		Widget updated = new Widget(
 				this.nameText.getText(),
 				this.descriptionText.getText(),
 				attributeList,
 				this.currentKey <= 0 ? updateDate : this.currentObj.created,
 				updateDate);
 		
-		if (updated.equals(SimpleDemoObject.EMPTY)) {
+		if (updated.equals(Widget.EMPTY)) {
 			return "object is empty";
 		}
 		if (updated.equals(this.currentObj)) {
 			return "objects haven't changed";
 		}
-		if (this.currentObj.equals(SimpleDemoObject.EMPTY)) {
+		if (this.currentObj.equals(Widget.EMPTY)) {
 			final Long newId = service.save(updated);
 			LOGGER.info("Saved to new ID: {}", newId);
 			updateData(newId, updated);
@@ -216,7 +216,7 @@ public class DataPane extends JPanel {
 			this.updatedLabel.setText("updated: " + DateUtils.prettyDate(updateDate));
 		}
 		
-		for (BiConsumer<Long, SimpleDemoObject> consumer : saveConsumers) {
+		for (BiConsumer<Long, Widget> consumer : saveConsumers) {
 			consumer.accept(this.currentKey, updated);
 		}
 		
@@ -235,8 +235,8 @@ public class DataPane extends JPanel {
 	 */
 	private final void clearForm() {
 		this.currentKey = -1l;
-		this.currentObj = SimpleDemoObject.EMPTY;
-		updateData(0l, SimpleDemoObject.EMPTY);
+		this.currentObj = Widget.EMPTY;
+		updateData(0l, Widget.EMPTY);
 	}
 	
 }

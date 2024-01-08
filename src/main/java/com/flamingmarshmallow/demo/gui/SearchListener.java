@@ -12,17 +12,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.flamingmarshmallow.demo.service.InOutService;
-import com.flamingmarshmallow.demo.service.SimpleDemoObject;
+import com.flamingmarshmallow.demo.service.Widget;
 
 public class SearchListener implements ActionListener {
 	private static final Logger LOGGER = LogManager.getLogger(SearchListener.class);
 	
-	private final InOutService<Long, SimpleDemoObject>  service;
+	private final InOutService<Long, Widget>  service;
 	
 	private final JTextField text;
-	private final BiConsumer<Long, SimpleDemoObject> searchSuccessUpdate;
+	private final BiConsumer<Long, Widget> searchSuccessUpdate;
 	
-	SearchListener(final InOutService<Long, SimpleDemoObject>  service, final JTextField text, final BiConsumer<Long, SimpleDemoObject> updateFunction) {
+	SearchListener(final InOutService<Long, Widget>  service, final JTextField text, final BiConsumer<Long, Widget> updateFunction) {
 		this.service = service;
 		this.text = text;
 		this.searchSuccessUpdate = updateFunction;
