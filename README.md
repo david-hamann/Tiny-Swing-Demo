@@ -1,6 +1,8 @@
 
 # A Small Swing Demo
 
+[![Java CI with Maven](https://github.com/david-hamann/Tiny-Swing-Demo/actions/workflows/maven.yml/badge.svg)](https://github.com/david-hamann/Tiny-Swing-Demo/actions/workflows/maven.yml)
+
 This is a very quickly built demo using Java Swing.  It is rough around the edges, but it should be relatively bug free.
 
 Minimal unit tests have been written at this point, but there is one unit test given for flavor.  Anything beyond demo code would warrant more thorough testing.
