@@ -23,7 +23,7 @@ public class ObjectList extends JList<Map.Entry<Long, Widget>> {
 	private static Logger LOGGER = LogManager.getLogger(ObjectList.class);
 	
 	private int offset = 0;
-	private int limit = 10;
+	private int limit = 25;
 	
 	private final InOutService<Long, Widget> service;
 	

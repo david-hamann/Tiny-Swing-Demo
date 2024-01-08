@@ -1,9 +1,7 @@
 package com.flamingmarshmallow.demo.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
 import java.util.Map;
 
 import javax.swing.JList;
@@ -42,21 +40,6 @@ public class AppPane extends JPanel {
 		pane.setEnabled(false);
 		setLayout(new BorderLayout());
 		add(pane);
-	}
-	
-	
-	public static class IndexPane extends JPanel {
-		
-		public IndexPane(final JList<Map.Entry<Long, Widget>> objectList) {
-			setBackground(Color.WHITE);
-			setLayout(new GridLayout(1,0));
-			
-			objectList.setBackground(Color.CYAN);
-			objectList.setForeground(Color.BLACK);
-			add(objectList);
-		}
-		
-		
 	}
 	
 	
