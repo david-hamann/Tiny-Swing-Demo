@@ -28,19 +28,24 @@ public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Map.E
 		//https://docs.oracle.com/javase/8/docs/api/javax/swing/ListCellRenderer.html
 		Color bg;
 		Color fg;
+		boolean isOpaque;
 
 		JList.DropLocation dropLocation = list.getDropLocation();
 		if (dropLocation != null && !dropLocation.isInsert() && dropLocation.getIndex() == index) {
-			bg = Color.blue;
-			fg = Color.white;
-		} else if (isSelected) {
 			bg = Color.RED;
 			fg = Color.WHITE;
+			isOpaque = true;
+		} else if (isSelected) {
+			bg = Color.WHITE;
+			fg = Color.BLACK;
+			isOpaque = true;
 		} else {
 			bg = Color.WHITE;
 			fg = Color.BLACK;
+			isOpaque = false;
 		}
-		
+
+		this.setOpaque(isOpaque);
 		setBackground(bg);
 		setForeground(fg);
 		
