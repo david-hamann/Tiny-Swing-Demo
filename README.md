@@ -1,6 +1,12 @@
 
 # A Small Swing Demo
 
+[![build](https://github.com/david-hamann/Tiny-Swing-Demo/actions/workflows/maven.yml/badge.svg)](https://github.com/david-hamann/Tiny-Swing-Demo/actions/workflows/maven.yml)
+
+[//]: # (TODO add coverage and other tags)
+
+
+
 This is a very quickly built demo using Java Swing.  It is rough around the edges, but it should be relatively bug free.
 
 Minimal unit tests have been written at this point, but there is one unit test given for flavor.  Anything beyond demo code would warrant more thorough testing.
@@ -45,38 +51,11 @@ public class Widget {
 The attributes are represented in the form by a comma-delimitted string.
 
 
-
 The buttons along the lower edge of the form perform the following actions.
-<dl>
-	<dt>clear</dt>
-		<dd>clears the form, and resets all fields</dd>
-	<dt>reset</dt>
-		<dd>resets the current object, removing any changes that have not been saved</dd>
-	<dt>save</dt>
-		<dd>Saves a new or updated object.</dd>
-</dl>
+
+   - `clear` - Clears the form and resets all fields.
+   - `reset` - Resets the current object and removes any unsaved changes.
+   - `save`  - Saves a new or updated object.
 
 A save will not be performed on an empty or unchanged object.
 
-
-
-<style type="text/css">
- dl {
-    padding: 0.5em;
-  }
-  dt {
-    float: left;
-    clear: left;
-    width: 100px;
-    text-align: right;
-    font-weight: bold;
-    color: blue;
-  }
-  dt::after {
-    content: ":";
-  }
-  dd {
-    margin: 0 0 0 110px;
-    padding: 0 0 0.5em 0;
-  }
-</style>
