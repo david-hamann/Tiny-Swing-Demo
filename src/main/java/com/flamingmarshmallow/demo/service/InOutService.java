@@ -1,5 +1,6 @@
 package com.flamingmarshmallow.demo.service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +12,12 @@ import java.util.Set;
  * @param <V> value
  */
 public interface InOutService<K, V> {
+	
+	/**
+	 * Returns the number of elements in the data.
+	 * @return
+	 */
+	public int size();
 
 	/**
 	 * Returns a single object if the key is found.

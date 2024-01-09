@@ -25,8 +25,8 @@ public class DemoService implements InOutService<Long, Widget> {
 	
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	
-	private final Map<Long, Widget> data = Collections.synchronizedMap(new LinkedHashMap<Long, Widget>());
-	
+	private final Map<Long, Widget> data = Collections.synchronizedMap(new LinkedHashMap<>());
+
 	/**
 	 * InOutService<String, SimpleDemoObject> service = DemoService.Builder().withDemoData().build();
 	 */
@@ -171,6 +171,12 @@ public class DemoService implements InOutService<Long, Widget> {
 	
 	Map<Long, Widget> dump() {
 		return Collections.unmodifiableMap(this.data);
+	}
+
+
+	@Override
+	public int size() {
+		return this.data.size();
 	}
 	
 }
