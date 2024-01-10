@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.flamingmarshmallow.demo.service.InOutService.Data;
+import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")

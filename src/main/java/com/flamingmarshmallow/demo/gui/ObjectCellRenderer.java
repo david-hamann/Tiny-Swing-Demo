@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import com.flamingmarshmallow.demo.service.InOutService.Data;
+import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 import com.flamingmarshmallow.demo.service.Widget;
 
 public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Data<Long, Widget>> {

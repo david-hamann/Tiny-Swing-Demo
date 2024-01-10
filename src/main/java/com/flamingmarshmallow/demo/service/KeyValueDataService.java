@@ -12,7 +12,7 @@ import java.util.Set;
  * @param <K> key
  * @param <V> value
  */
-public interface InOutService<K, V> {
+public interface KeyValueDataService<K, V> {
 	
 	public static record Data<K, V>(K id, V value) {
 		public Data {

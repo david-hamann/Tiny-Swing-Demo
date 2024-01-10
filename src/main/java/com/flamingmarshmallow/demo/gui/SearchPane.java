@@ -8,13 +8,13 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.flamingmarshmallow.demo.service.InOutService;
+import com.flamingmarshmallow.demo.service.KeyValueDataService;
 import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
 public class SearchPane extends JPanel {
 	
-	public SearchPane(final BiConsumer<Long, Widget> searchSuccessUpdate, final InOutService<Long, Widget> service) {
+	public SearchPane(final BiConsumer<Long, Widget> searchSuccessUpdate, final KeyValueDataService<Long, Widget> service) {
 
 		JTextField searchText = new TextField(16);
 		searchText.setBackground(Color.WHITE);

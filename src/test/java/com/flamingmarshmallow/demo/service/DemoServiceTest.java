@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
-import com.flamingmarshmallow.demo.service.InOutService.Data;
+import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 import com.flamingmarshmallow.demo.service.Paging.InvalidPageNumber;
 import com.flamingmarshmallow.demo.service.Paging.InvalidPageSize;
 import com.flamingmarshmallow.demo.service.Paging.OffsetOutOfRange;
@@ -87,6 +87,9 @@ class DemoServiceTest {
 							List<Data<Long, Widget>> rows = service.getPage(page, test.pageSize());
 							Assertions.assertNotNull(rows);
 							Assertions.assertEquals(test.expectedfirstPageRowCount(), rows.size());
+						} else if (page < test.expectedPageCount()) {
+							List<Data<Long, Widget>> rows = service.getPage(page, test.pageSize());
+							Assertions.assertNotNull(rows);
 						}
 						
 						if (page == test.expectedPageCount()) {

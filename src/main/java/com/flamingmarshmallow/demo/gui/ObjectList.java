@@ -13,8 +13,8 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.flamingmarshmallow.demo.service.InOutService;
-import com.flamingmarshmallow.demo.service.InOutService.Data;
+import com.flamingmarshmallow.demo.service.KeyValueDataService;
+import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
@@ -29,14 +29,14 @@ public class ObjectList extends JList<Data<Long, Widget>> {
 	private int offset = 0;
 	private int limit = 25;
 	
-	private final InOutService<Long, Widget> service;
+	private final KeyValueDataService<Long, Widget> service;
 	
 	/**
 	 * A list of elements in the dataset.
 	 * @param service
 	 * @param selectionComsumer
 	 */
-	ObjectList(final InOutService<Long, Widget> service, final BiConsumer<Long, Widget> selectionComsumer) {
+	ObjectList(final KeyValueDataService<Long, Widget> service, final BiConsumer<Long, Widget> selectionComsumer) {
 		this.service = service;
 		this.setCellRenderer(new ObjectCellRenderer());
 

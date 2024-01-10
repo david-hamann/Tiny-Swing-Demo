@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DemoService implements InOutService<Long, Widget>, Paging<Long, Widget>{
+public class DemoService implements KeyValueDataService<Long, Widget>, Paging<Long, Widget>{
 	
 	private static final Logger LOGGER = LogManager.getLogger(DemoService.class);
 	
@@ -49,7 +49,7 @@ public class DemoService implements InOutService<Long, Widget>, Paging<Long, Wid
 			return this;
 		}
 		
-		public InOutService<Long, Widget> build() {
+		public KeyValueDataService<Long, Widget> build() {
 			DemoService service = new DemoService();
 			try {
 				service.load(this.dataFile);

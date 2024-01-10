@@ -2,7 +2,7 @@ package com.flamingmarshmallow.demo.service;
 
 import java.util.List;
 
-import com.flamingmarshmallow.demo.service.InOutService.Data;
+import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 
 public interface Paging<K,V> {
 	

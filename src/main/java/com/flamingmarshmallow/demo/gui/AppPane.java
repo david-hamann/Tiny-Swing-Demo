@@ -7,8 +7,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import com.flamingmarshmallow.demo.service.InOutService;
-import com.flamingmarshmallow.demo.service.InOutService.Data;
+import com.flamingmarshmallow.demo.service.KeyValueDataService;
+import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
@@ -16,7 +16,7 @@ public class AppPane extends JPanel {
 
 	private final JSplitPane pane;
 	
-	public AppPane(final InOutService<Long, Widget> service) {
+	public AppPane(final KeyValueDataService<Long, Widget> service) {
 		GridBagConstraints c = new GridBagConstraints();
 
 		

@@ -30,7 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 
-import com.flamingmarshmallow.demo.service.InOutService;
+import com.flamingmarshmallow.demo.service.KeyValueDataService;
 import com.flamingmarshmallow.demo.service.Widget;
 import com.flamingmarshmallow.demo.utils.DateUtils;
 
@@ -56,7 +56,7 @@ public class DataPane extends JPanel {
 	}
 	
 	
-	public DataPane(final InOutService<Long, Widget> service) {
+	public DataPane(final KeyValueDataService<Long, Widget> service) {
 		setBackground(Color.WHITE);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -185,7 +185,7 @@ public class DataPane extends JPanel {
 	 * @param service
 	 * @return
 	 */
-	private final String saveChanges(final InOutService<Long, Widget> service) {
+	private final String saveChanges(final KeyValueDataService<Long, Widget> service) {
 		final long updateDate = Instant.now().toEpochMilli();
 		final String attributes = this.attributesText.getText();
 
