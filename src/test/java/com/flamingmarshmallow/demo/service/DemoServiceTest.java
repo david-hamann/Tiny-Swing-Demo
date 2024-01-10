@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
@@ -38,7 +37,7 @@ class DemoServiceTest {
 	}
 
 	@TestFactory
-	Stream<DynamicTest> getPage_page_size() {
+	Stream<DynamicTest> testPaging() {
 		record Test (
 			String name,
 			String[] widgetNames,
@@ -60,9 +59,9 @@ class DemoServiceTest {
 				.map(test -> DynamicTest.dynamicTest(test.name(), () -> {
 					
 					//Paging<Long, Widget>
-					DemoService service = new DemoService();
+					Paging<Long, Widget> service = new DemoService();
 					for (int i = 0; i < test.widgetNames().length; i++) {
-						service.save(Long.valueOf(i), new Widget(test.widgetNames()[i], "", Collections.emptyList(), 0, 0));
+						((DemoService) service).save(Long.valueOf(i), new Widget(test.widgetNames()[i], "", Collections.emptyList(), 0, 0));
 					}
 					
 					Assertions.assertEquals(test.expectedPageCount(), service.pageCount(test.pageSize()));
