@@ -139,11 +139,11 @@ public class DemoService implements InOutService<Long, Widget>, Paging<Long, Wid
 	 */
 	@Override
 	public List<Data<Long, Widget>> getAll(final int offset, final int limit) {
-		if (offset < 0 || offset >= this.data.size() || limit < 0) {
-			throw new OffsetOutOfRange();
-		}
 		if (this.data.size() == 0) {
 			return Collections.emptyList();
+		}
+		if (offset < 0 || offset >= this.data.size() || limit < 0) {
+			throw new OffsetOutOfRange();
 		}
 		
 		return this.data.entrySet().stream()
@@ -161,14 +161,6 @@ public class DemoService implements InOutService<Long, Widget>, Paging<Long, Wid
 	public List<Data<Long, Widget>> getPage(final int pageNumber) {
 		return this.getPage(pageNumber, this.defaultPageSize);
 	}
-
-	@SuppressWarnings("serial")
-	public static class OffsetOutOfRange extends RuntimeException {}
-	@SuppressWarnings("serial")
-	public static class InvalidPageNumber extends RuntimeException {}
-	@SuppressWarnings("serial")
-	public static class InvalidPageSize extends RuntimeException {}
-	
 	
 	/**
 	 * There's always at least one page, although it may be empty.
@@ -184,21 +176,29 @@ public class DemoService implements InOutService<Long, Widget>, Paging<Long, Wid
 		if (pageSize <= 0) {
 			throw new InvalidPageSize();
 		}
+		
+		if (pageNumber != 1 && pageNumber > this.pageCount(pageSize)) {
+			throw new InvalidPageNumber();
+		}
 
 		int offset = (pageNumber -1) * pageSize;
 		
-		List<Data<Long, Widget>> rows = this.getAll(offset, pageSize)
-					.stream()
-					.collect(Collectors.toList());
-		
-		if (rows.size() == 0) {
-			if (pageNumber == 1) {
-				return Collections.emptyList(); //there's always page 1
+		try {
+			List<Data<Long, Widget>> rows = this.getAll(offset, pageSize)
+						.stream()
+						.collect(Collectors.toList());
+			
+			if (rows.size() == 0) {
+				if (pageNumber == 1) {
+					return Collections.emptyList(); //there's always page 1
+				}
+				throw new InvalidPageNumber();
 			}
+			
+			return rows;
+		} catch (OffsetOutOfRange ex) {
 			throw new InvalidPageNumber();
 		}
-		
-		return rows;
 	}
 	
 	public int pageCount(final int pageSize) {

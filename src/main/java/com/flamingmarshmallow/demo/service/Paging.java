@@ -16,4 +16,14 @@ public interface Paging<K,V> {
 	
 	public int pageCount(final int pageSize);
 	
+
+	@SuppressWarnings("serial")
+	public static class OffsetOutOfRange extends RuntimeException {}
+	
+	@SuppressWarnings("serial")
+	public static class InvalidPageNumber extends RuntimeException {}
+	
+	@SuppressWarnings("serial")
+	public static class InvalidPageSize extends RuntimeException {}
+	
 }
