@@ -3,6 +3,7 @@ package com.flamingmarshmallow.demo.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -12,6 +13,7 @@ import javax.swing.JScrollPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.flamingmarshmallow.demo.gui.ObjectList.PageNav;
 import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 import com.flamingmarshmallow.demo.service.Widget;
 
@@ -37,24 +39,32 @@ public class IndexPane extends JPanel {
 		c.gridx = 0;
 		c.gridy = 1;
 		
-		add(new NavButtons(objectList), c);
+		NavButtons buttons = new NavButtons(objectList);
+		add(buttons, c);
+		
+		((ObjectList) objectList).initializePages(p -> buttons.updateButtons(p));
 	}
 	
 	public static class NavButtons extends JPanel {
 		
+		private JButton prevButton;
+		private JButton nextButton;
+		
 		public NavButtons(final JList<Data<Long, Widget>> objectList) {
-			JButton prevButton = new JButton(NavAction.PREV.getText());
+			prevButton = new JButton(NavAction.PREV.getText());
 			prevButton.addActionListener(new NavListener(a -> ((ObjectList) objectList).changePage(a, p -> this.updateButtons(p))));
 			
-			JButton nextButton = new JButton(NavAction.NEXT.getText());
+			nextButton = new JButton(NavAction.NEXT.getText());
 			nextButton.addActionListener(new NavListener(a -> ((ObjectList) objectList).changePage(a, p -> this.updateButtons(p))));
 
 			add(prevButton);
 			add(nextButton);
 		}
 
-		private void updateButtons(final ObjectList.Page page) {
+		private void updateButtons(final Set<ObjectList.PageNav> page) {
 			LOGGER.info("change visibility to {}", page);
+			this.nextButton.setEnabled(page.contains(PageNav.HAS_NEXT));
+			this.prevButton.setEnabled(page.contains(PageNav.HAS_PREV));
 		}
 		
 	}
