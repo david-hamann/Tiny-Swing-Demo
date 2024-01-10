@@ -3,7 +3,6 @@ package com.flamingmarshmallow.demo.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -13,6 +12,7 @@ import javax.swing.JScrollPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.flamingmarshmallow.demo.service.InOutService.Data;
 import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
@@ -20,7 +20,7 @@ public class IndexPane extends JPanel {
 	
 	private static final Logger LOGGER = LogManager.getLogger(IndexPane.class);
 	
-	public IndexPane(final JList<Map.Entry<Long, Widget>> objectList) {
+	public IndexPane(final JList<Data<Long, Widget>> objectList) {
 		setBackground(Color.WHITE);
 		
 		GridBagLayout layout = new GridBagLayout();
@@ -42,7 +42,7 @@ public class IndexPane extends JPanel {
 	
 	public static class NavButtons extends JPanel {
 		
-		public NavButtons(final JList<Map.Entry<Long, Widget>> objectList) {
+		public NavButtons(final JList<Data<Long, Widget>> objectList) {
 			JButton prevButton = new JButton(NavAction.PREV.getText());
 			prevButton.addActionListener(new NavListener(a -> ((ObjectList) objectList).changePage(a, p -> this.updateButtons(p))));
 			

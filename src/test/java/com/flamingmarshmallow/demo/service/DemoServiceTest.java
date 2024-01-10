@@ -1,10 +1,7 @@
 package com.flamingmarshmallow.demo.service;
 
-import java.lang.Exception;
-import java.lang.String;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
@@ -14,6 +11,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+
+import com.flamingmarshmallow.demo.service.DemoService.OffsetOutOfRange;
+import com.flamingmarshmallow.demo.service.InOutService.Data;
 
 class DemoServiceTest {
 
@@ -32,8 +32,15 @@ class DemoServiceTest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
+	
+	
+//	@TestFactory
+//	Stream<DynamicTest> getPage_page_size() {
+//		List<TestData>
+//	}
+	
 
-	class TestData {
+	class GetAllTest {
 		String name;
 		int size;
 		int offset;
@@ -41,7 +48,7 @@ class DemoServiceTest {
 		int expected;
 		boolean error;
 		
-		TestData(String name, int size, int offset, int limit, int expected, boolean error) {
+		GetAllTest(String name, int size, int offset, int limit, int expected, boolean error) {
 			this.name = name;
 			this.size = size;
 			this.offset = offset;
@@ -55,22 +62,20 @@ class DemoServiceTest {
 			return String.format("{name=%s, size=%s, offset=%s, limit=%s, expected=%s, error=%s}", name, size, offset, limit, expected, error);
 		}
 	}
-	
-	//TODO testGetAll_set
-	
+
 	@TestFactory
 	Stream<DynamicTest> testGetAll_offset_limit() {
-		List<TestData> tests = List.of(
-				new TestData("1", 100, 0, 1, 1, false),
-				new TestData("10", 100, 0, 10, 10, false),
-				new TestData("100", 100, 0, 100, 100, false),
-				new TestData("over", 100, 0, 200, 100, false),
-				new TestData("almost", 100, 99, 1, 1, false),
-				new TestData("even", 100, 99, 2, 1, false),
-				new TestData("over one", 100, 99, 3, 1, false),
-				new TestData("none", 100, 100, 3, 0, true),
-				new TestData("bad offset", 100, -1, 3, 0, true),
-				new TestData("badder offset", 100, 123, 5, 0, true)
+		List<GetAllTest> tests = List.of(
+				new GetAllTest("1", 100, 0, 1, 1, false),
+				new GetAllTest("10", 100, 0, 10, 10, false),
+				new GetAllTest("100", 100, 0, 100, 100, false),
+				new GetAllTest("over", 100, 0, 200, 100, false),
+				new GetAllTest("almost", 100, 99, 1, 1, false),
+				new GetAllTest("even", 100, 99, 2, 1, false),
+				new GetAllTest("over one", 100, 99, 3, 1, false),
+				new GetAllTest("none", 100, 100, 3, 0, true),
+				new GetAllTest("bad offset", 100, -1, 3, 0, true),
+				new GetAllTest("badder offset", 100, 123, 5, 0, true)
 		);
 
 		return tests.stream().map(test -> DynamicTest.dynamicTest(test.name, () -> {
@@ -80,11 +85,11 @@ class DemoServiceTest {
 			}
 
 			if (test.error) {
-				Assertions.assertThrows(IllegalArgumentException.class, () -> {
+				Assertions.assertThrows(OffsetOutOfRange.class, () -> {
 					service.getAll(test.offset, test.limit);
 				}, test.toString());
 			} else {
-				List<Map.Entry<Long, Widget>> m = service.getAll(test.offset, test.limit);
+				List<Data<Long, Widget>> m = service.getAll(test.offset, test.limit);
 				Assertions.assertEquals(test.expected, m.size(), test.toString());
 			}
 			

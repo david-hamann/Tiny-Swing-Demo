@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DemoService implements InOutService<Long, Widget> {
+public class DemoService implements InOutService<Long, Widget>, Paging<Long, Widget>{
 	
 	private static final Logger LOGGER = LogManager.getLogger(DemoService.class);
 	
@@ -106,17 +107,18 @@ public class DemoService implements InOutService<Long, Widget> {
 	}
 	
 	@Override
-	public Map<Long, Widget> getAll(final Set<Long> keys) {
+	public List<Data<Long, Widget>> getAll(final Set<Long> keys) {
 		return this.data.entrySet().stream()
 				   .filter(e -> keys.contains(e.getKey()))
-	 	           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
+				   .map(e -> new Data<>(e.getKey(), e.getValue()))
+				   .collect(Collectors.toList());
 	}
 
 	/**
 	 * Returns if the name includes the search term.
 	 */
 	@Override
-	public List<Map.Entry<Long, Widget>> search(final String searchTerm, final int offset, final int limit) {
+	public List<Data<Long, Widget>> search(final String searchTerm, final int offset, final int limit) {
 		if (offset < 0 || offset >= this.data.size() || limit < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -128,6 +130,7 @@ public class DemoService implements InOutService<Long, Widget> {
 				.filter(e -> e.getValue().name.indexOf(searchTerm) >= 0)
 				.skip(offset)
 				.limit(limit)
+				.map(e -> new Data<>(e.getKey(), e.getValue()))
 				.collect(Collectors.toList());
 	}
 	
@@ -135,9 +138,9 @@ public class DemoService implements InOutService<Long, Widget> {
 	 * Uses a LinkedHashMap implementation.
 	 */
 	@Override
-	public List<Map.Entry<Long, Widget>> getAll(final int offset, final int limit) {
+	public List<Data<Long, Widget>> getAll(final int offset, final int limit) {
 		if (offset < 0 || offset >= this.data.size() || limit < 0) {
-			throw new IllegalArgumentException();
+			throw new OffsetOutOfRange();
 		}
 		if (this.data.size() == 0) {
 			return Collections.emptyList();
@@ -146,7 +149,70 @@ public class DemoService implements InOutService<Long, Widget> {
 		return this.data.entrySet().stream()
 	 	           .skip(offset)
 	 	           .limit(limit)
+				   .map(e -> new Data<>(e.getKey(), e.getValue()))
 	 	           .collect(Collectors.toList());
+	}
+	
+
+	private int defaultPageSize = 25;
+	public void setDefaultPageSize(final int pageSize) {
+		this.defaultPageSize = pageSize;
+	}
+	public List<Data<Long, Widget>> getPage(final int pageNumber) {
+		return this.getPage(pageNumber, this.defaultPageSize);
+	}
+
+	@SuppressWarnings("serial")
+	public static class OffsetOutOfRange extends RuntimeException {}
+	@SuppressWarnings("serial")
+	public static class InvalidPageNumber extends RuntimeException {}
+	@SuppressWarnings("serial")
+	public static class InvalidPageSize extends RuntimeException {}
+	
+	
+	/**
+	 * There's always at least one page, although it may be empty.
+	 * @param pageNumber
+	 * @param pageSize
+	 * @return
+	 */
+	public List<Data<Long, Widget>> getPage(final int pageNumber, final int pageSize) {
+		//1 -> 0, pageSize;
+		if (pageNumber <= 0) {
+			throw new InvalidPageNumber();
+		}
+		if (pageSize <= 0) {
+			throw new InvalidPageSize();
+		}
+
+		int offset = (pageNumber -1) * pageSize;
+		
+		List<Data<Long, Widget>> rows = this.getAll(offset, pageSize)
+					.stream()
+					.collect(Collectors.toList());
+		
+		if (rows.size() == 0) {
+			if (pageNumber == 1) {
+				return Collections.emptyList(); //there's always page 1
+			}
+			throw new InvalidPageNumber();
+		}
+		
+		return rows;
+	}
+	
+	public int pageCount(final int pageSize) {
+		// this should never get caught, because the getPage should catch it
+		// if (pageSize <= 0) { throw new InvalidPageSize(); }
+		int rows = this.data.size();
+		int pages = rows/pageSize;
+		if ( rows % pageSize > 0) {
+			pages++;
+		}
+		if (pages == 0) {
+			return 1; //there's always one page
+		}
+		return pages;
 	}
 	
 	@Override
@@ -165,8 +231,8 @@ public class DemoService implements InOutService<Long, Widget> {
 	}
 
 	@Override
-	public void delete(Long key) {
-		this.data.remove(key);
+	public Widget delete(Long key) {
+		return this.data.remove(key);
 	}
 	
 	Map<Long, Widget> dump() {

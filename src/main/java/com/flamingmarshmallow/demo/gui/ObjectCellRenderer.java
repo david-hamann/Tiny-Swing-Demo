@@ -2,16 +2,16 @@ package com.flamingmarshmallow.demo.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import com.flamingmarshmallow.demo.service.InOutService.Data;
 import com.flamingmarshmallow.demo.service.Widget;
 
-public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Map.Entry<Long, Widget>> {
+public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Data<Long, Widget>> {
 	
 	//TODO do we need to keep track of the element's id here?
 	
@@ -20,10 +20,10 @@ public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Map.E
 	}
 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends Entry<Long, Widget>> list,
-			Entry<Long, Widget> entry, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<? extends Data<Long, Widget>> list, Data<Long, Widget> value,
+			int index, boolean isSelected, boolean cellHasFocus) {
 		
-		this.setText(entry.getValue().name + " (" + entry.getKey() + ")");
+		this.setText(value.value().name + " (" + value.id() + ")");
 		
 		//https://docs.oracle.com/javase/8/docs/api/javax/swing/ListCellRenderer.html
 		Color bg;
@@ -51,7 +51,5 @@ public class ObjectCellRenderer extends JLabel implements ListCellRenderer<Map.E
 		
 		return this;
 	}
-	
-	
 	
 }
