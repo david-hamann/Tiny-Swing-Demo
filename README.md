@@ -9,7 +9,7 @@
 
 This is a very quickly built demo using Java Swing.  It is rough around the edges, but it should be relatively bug free.
 
-Minimal unit tests have been written at this point, but there is one unit test given for flavor.  Anything beyond demo code would warrant more thorough testing.
+Minimal unit tests have been written at this point, but there is one unit test given for flavor.  Anything beyond demo code would warrant fine tuning the UI and more thorough testing.
 
 ## Prerequisites
 
