@@ -1,5 +1,5 @@
 
-# A Small Swing Demo
+# Tiny Swing Demo
 
 [![build](https://github.com/david-hamann/Tiny-Swing-Demo/actions/workflows/maven.yml/badge.svg)](https://github.com/david-hamann/Tiny-Swing-Demo/actions/workflows/maven.yml)
 
