@@ -2,13 +2,14 @@ package com.flamingmarshmallow.demo.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
-import java.util.Map;
 
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import com.flamingmarshmallow.demo.service.InOutService;
+import com.flamingmarshmallow.demo.service.DemoService;
+import com.flamingmarshmallow.demo.service.KeyValueDataService;
+import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
@@ -16,12 +17,12 @@ public class AppPane extends JPanel {
 
 	private final JSplitPane pane;
 	
-	public AppPane(final InOutService<Long, Widget> service) {
-		GridBagConstraints c = new GridBagConstraints();
+	public AppPane(final KeyValueDataService<Long, Widget> service) {
+//		GridBagConstraints c = new GridBagConstraints();
 
 		
 		DataPane dataPane = new DataPane(service);
-		JList<Map.Entry<Long, Widget>> objectList = new ObjectList(service, (k,v) -> dataPane.updateData(k, v));
+		JList<Data<Long, Widget>> objectList = new ObjectList((DemoService) service, (k,v) -> dataPane.updateData(k, v));
 		dataPane.registerSaveConsumer((l,o) -> {
 			((ObjectList) objectList).updateListing();
 		});
