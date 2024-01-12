@@ -1,10 +1,44 @@
 package com.flamingmarshmallow.demo.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 
 public interface Paging<K,V> {
+	
+	public static record PagingDetail (
+		Set<PageNav> pageNav,
+		int currentPage,
+		int pageCount
+	) {}
+	
+	public static enum PageNav {
+		HAS_PREV, HAS_NEXT;
+
+		/**
+		 * Page must be between 1 and pages inclusive.
+		 * 
+		 * @param page
+		 * @param pages
+		 * @return
+		 */
+		public static Set<PageNav> get(final int page, final int pages) {
+			final Set<PageNav> nav = new HashSet<>();
+			if (page == 0 || page > pages) {
+				throw new IllegalArgumentException();
+			}
+			if (page > 1) {
+				nav.add(HAS_PREV);
+			}
+			if (page < pages) {
+				nav.add(HAS_NEXT);
+			}
+			return nav;
+		}
+	}
+	
 	
 	static final int DEFAULT_PAGE_SIZE = 25;
 	

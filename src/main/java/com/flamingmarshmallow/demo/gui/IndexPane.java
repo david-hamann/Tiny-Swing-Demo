@@ -3,18 +3,20 @@ package com.flamingmarshmallow.demo.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Set;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.flamingmarshmallow.demo.gui.ObjectList.PageNav;
 import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
+import com.flamingmarshmallow.demo.service.Paging.PageNav;
+import com.flamingmarshmallow.demo.service.Paging.PagingDetail;
 import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
@@ -50,6 +52,9 @@ public class IndexPane extends JPanel {
 		private JButton prevButton;
 		private JButton nextButton;
 		
+		private JTextField pageText;
+		private JLabel pageLabel;
+		
 		public NavButtons(final JList<Data<Long, Widget>> objectList) {
 			prevButton = new JButton(NavAction.PREV.getText());
 			prevButton.addActionListener(new NavListener(a -> ((ObjectList) objectList).changePage(a, p -> this.updateButtons(p))));
@@ -57,14 +62,26 @@ public class IndexPane extends JPanel {
 			nextButton = new JButton(NavAction.NEXT.getText());
 			nextButton.addActionListener(new NavListener(a -> ((ObjectList) objectList).changePage(a, p -> this.updateButtons(p))));
 
+			pageText = new JTextField(((ObjectList) objectList).getCurrentPage());
+			pageLabel = new JLabel();
+			this.setPageLabel(pageLabel, ((ObjectList) objectList).getPageCount());
+			
 			add(prevButton);
+			add(pageText);
+			add(pageLabel);
 			add(nextButton);
 		}
 
-		private void updateButtons(final Set<ObjectList.PageNav> page) {
-			LOGGER.info("change visibility to {}", page);
-			this.nextButton.setEnabled(page.contains(PageNav.HAS_NEXT));
-			this.prevButton.setEnabled(page.contains(PageNav.HAS_PREV));
+		private void updateButtons(final PagingDetail pageDetail) {
+			LOGGER.info("change visibility to {}", pageDetail);
+			this.pageText.setText(Integer.toString(pageDetail.currentPage()));
+			this.setPageLabel(pageLabel, pageDetail.pageCount());
+			this.nextButton.setEnabled(pageDetail.pageNav().contains(PageNav.HAS_NEXT));
+			this.prevButton.setEnabled(pageDetail.pageNav().contains(PageNav.HAS_PREV));
+		}
+
+		private void setPageLabel(final JLabel label, final int pageCount) {
+			label.setText(String.format("of %s pages", pageCount));
 		}
 		
 	}

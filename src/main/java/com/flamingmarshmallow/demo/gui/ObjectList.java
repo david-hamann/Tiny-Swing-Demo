@@ -1,9 +1,7 @@
 package com.flamingmarshmallow.demo.gui;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -17,42 +15,19 @@ import org.apache.logging.log4j.Logger;
 
 import com.flamingmarshmallow.demo.service.KeyValueDataService.Data;
 import com.flamingmarshmallow.demo.service.Paging;
+import com.flamingmarshmallow.demo.service.Paging.PageNav;
+import com.flamingmarshmallow.demo.service.Paging.PagingDetail;
 import com.flamingmarshmallow.demo.service.Widget;
 
 @SuppressWarnings("serial")
 public class ObjectList extends JList<Data<Long, Widget>> {
-	
-	public static enum PageNav {
-		HAS_PREV, HAS_NEXT;
-
-		/**
-		 * Page must be between 1 and pages inclusive.
-		 * 
-		 * @param page
-		 * @param pages
-		 * @return
-		 */
-		public static Set<PageNav> get(final int page, final int pages) {
-			final Set<PageNav> nav = new HashSet<>();
-			if (page == 0 || page > pages) {
-				throw new IllegalArgumentException();
-			}
-			if (page > 1) {
-				nav.add(HAS_PREV);
-			}
-			if (page < pages) {
-				nav.add(HAS_NEXT);
-			}
-			return nav;
-		}
-	}
 	
 	private static Logger LOGGER = LogManager.getLogger(ObjectList.class);
 	
 	private int currentPage = 1;
 	
 //	private int offset = 0;
-	private int limit = 25;
+	private int limit = 20;
 	
 	private final Paging<Long, Widget> service;
 	
@@ -89,10 +64,19 @@ public class ObjectList extends JList<Data<Long, Widget>> {
 		}
 	}
 	
-	public void initializePages(final Consumer<Set<PageNav>> consumer) {
+	public void initializePages(final Consumer<PagingDetail> consumer) {
 		updateListing();
 		final int pages = service.pageCount(this.limit);
-		consumer.accept(PageNav.get(this.currentPage, pages));
+		PagingDetail pageDetail = new PagingDetail(PageNav.get(this.currentPage, pages), this.currentPage, pages);
+		consumer.accept(pageDetail);
+	}
+	
+	public int getPageCount() {
+		return service.pageCount(this.limit);
+	}
+	
+	public int getCurrentPage() {
+		return this.currentPage;
 	}
 	
 	/**
@@ -100,7 +84,7 @@ public class ObjectList extends JList<Data<Long, Widget>> {
 	 * @param action
 	 * @param consumer
 	 */
-	public void changePage(final NavAction action, final Consumer<Set<PageNav>> consumer) {
+	public void changePage(final NavAction action, final Consumer<PagingDetail> consumer) {
 		final int pages = service.pageCount(this.limit);
 		switch (action) {
 		case NEXT:
@@ -120,7 +104,8 @@ public class ObjectList extends JList<Data<Long, Widget>> {
 		}
 		
 		//callback with current state of paging
-		consumer.accept(PageNav.get(this.currentPage, pages));
+		PagingDetail pageDetail = new PagingDetail(PageNav.get(this.currentPage, pages), this.currentPage, pages);
+		consumer.accept(pageDetail);
 	}
 
 	

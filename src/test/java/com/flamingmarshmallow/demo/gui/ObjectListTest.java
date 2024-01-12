@@ -6,7 +6,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.flamingmarshmallow.demo.gui.ObjectList.PageNav;
+import com.flamingmarshmallow.demo.service.Paging.PageNav;
 
 class ObjectListTest {
 
